@@ -25,7 +25,16 @@ class ShowAngle(ReporterPlugin):
 		viewHeight = 18
 		self.angleWindow = Window((viewWidth, viewHeight))
 		self.angleWindow.group = PatchedGroup((0, 0, viewWidth, viewHeight)) # Using PatchedGroup() here instead of Group()
-		self.angleWindow.group.text = TextBox((3, 2, 100, 100), self.name, sizeStyle='small')
+		self.angleWindow.group.text = TextBox("auto", self.name)
+		try:
+			rules = [
+				"H:|-6-[text]-8-|",
+				"V:|-4-[text]-4-|",
+			]
+			self.angleWindow.group.addAutoPosSizeRules(rules)
+		except Exception as e:
+			import traceback
+			print(traceback.format_exc())
 		GSCallbackHandler.addCallback_forOperation_(self, "GSInspectorViewControllersCallback")
 
 	def inspectorViewControllersForLayer_(self, layer):
