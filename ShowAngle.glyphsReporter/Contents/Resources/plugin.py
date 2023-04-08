@@ -6,7 +6,7 @@ from GlyphsApp.plugins import *
 from vanilla import *
 from vanilla.vanillaGroup import Group
 from math import degrees, atan2
-from Foundation import NSPoint, NSViewController
+from Foundation import NSPoint, NSViewController, NSMaxX, NSMaxY
 
 # Our own patched Vanilla Group class
 class PatchedGroup(Group):
@@ -14,7 +14,6 @@ class PatchedGroup(Group):
 
 class ShowAngle(ReporterPlugin):
 	isVisible = False
-
 	@objc.python_method
 	def settings(self):
 		self.menuName = 'Angle of Selection'
@@ -84,8 +83,8 @@ class ShowAngle(ReporterPlugin):
 
 		if len(selection) > 1:
 			# get angle of the selecition rectangle ◿
-			point1 = NSPoint(selectionBounds.origin.x, selectionBounds.origin.y)
-			point2 = NSPoint(selectionBounds.origin.x + selectionBounds.size.width, selectionBounds.origin.y + selectionBounds.size.height)
+			point1 = selectionBounds.origin
+			point2 = NSPoint(NSMaxX(selectionBounds), NSMaxY(selectionBounds))
 			angle = self.getAngle(point1, point2)
 			# draw angle
 			if angle is not None:
