@@ -38,22 +38,12 @@ class ShowAngle(ReporterPlugin):
 		GSCallbackHandler.addCallback_forOperation_(self, "GSInspectorViewControllersCallback")
 
 	def inspectorViewControllersForLayer_(self, layer):
-		return [self]
+		if self.isVisible:
+			return [self]
+		return []
 
 	def view(self):
-		if self.isVisible:
-			if Glyphs.versionNumber > 3: # Glyphs 3
-
-				# Crashes Glyphs:
-				# viewController = NSViewController.new()
-				# viewController.setView_(self.angleWindow.group.getNSView())
-				# return viewController
-				return None
-				
-			else: # Glyphs 2
-				return self.angleWindow.group.getNSView()
-		else:
-			return None			
+		return self.angleWindow.group.getNSView()
 
 	@objc.python_method
 	def nicelyRound(self, value):
