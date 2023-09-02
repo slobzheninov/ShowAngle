@@ -7,11 +7,11 @@
 	<key>CFBundleExecutable</key>
 	<string>plugin</string>
 	<key>CFBundleIdentifier</key>
-	<string>com.slobzheninov.ShowAngle</string>
+	<string>com.slobzheninov.ShowAngleAndDistance</string>
 	<key>CFBundleInfoDictionaryVersion</key>
 	<string>1.0</string>
 	<key>CFBundleName</key>
-	<string>ShowAngle</string>
+	<string>Show Angle And Distance</string>
 	<key>CFBundleShortVersionString</key>
 	<string>1.0</string> <!-- 1.0 -->
 	<key>CFBundleVersion</key>
@@ -19,13 +19,13 @@
 	<key>UpdateFeedURL</key>
 	<string>____OnlineUrlToThisPlist____</string>
 	<key>productPageURL</key>
-	<string>https://github.com/slobzheninov/Show-Angle</string>
+	<string>https://github.com/slobzheninov/Show-Angle-And-Distance</string>
 	<key>productReleaseNotes</key>
 	<string>Revival</string>
 	<key>NSHumanReadableCopyright</key>
 	<string>Copyright, Alex Slobzheninov, 2023</string>
 	<key>NSPrincipalClass</key>
-	<string>ShowAngle</string>
+	<string>ShowAngleAndDistance</string>
 	<key>PyMainFileNames</key>
 	<array>
 		<string>plugin.py</string>

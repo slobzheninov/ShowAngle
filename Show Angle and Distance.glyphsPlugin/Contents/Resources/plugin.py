@@ -12,39 +12,79 @@ from Foundation import NSPoint, NSViewController, NSMaxX, NSMaxY
 class PatchedGroup(Group):
 	nsViewClass = objc.lookUpClass("GSInspectorView")
 
-class ShowAngle(ReporterPlugin):
-	isVisible = False
-
+class ShowAngleAndDistance(GeneralPlugin):
+	
 	@objc.python_method
 	def settings(self):
-		self.menuName = 'Angle of Selection'
-		self.name = 'Show Angle'
+		self.isVisible = False
+		self.state = False
+		self.menuName = 'Angle & Distance of Selection'
+		self.name = 'Show Angle And Distance'
 
 		# Create Vanilla window and group with controls
-		viewWidth = 52
-		viewHeight = 18
+		viewWidth = 60
+		viewHeight = 40
 		self.angleWindow = Window((viewWidth, viewHeight))
 		self.angleWindow.group = PatchedGroup((0, 0, viewWidth, viewHeight)) # Using PatchedGroup() here instead of Group()
-		
+
 		if Glyphs.versionNumber >= 3: # Glyphs 3, auto size
 			self.angleWindow.group.text = TextBox("auto", self.name)
 			try:
 				rules = [
 					"H:|-6-[text]-8-|",
-					"V:|-4-[text]-4-|",
+					"V:|-5-[text]-5-|",
 				]
 				self.angleWindow.group.addAutoPosSizeRules(rules)
+
 			except Exception as e:
 				import traceback
 				print(traceback.format_exc())
 		
-		else: # Glyphs 2, manual size because there's something wrong with auto sizing and I don’t quite understand it
-			self.angleWindow.group.text = TextBox((3, 2, 100, 100), self.name, sizeStyle='small')
-		
+		else: # Glyphs 2, manual size because there's something wrong with auto sizing
+			# self.angleWindow.group.text = TextBox((3, 2, 100, 100), self.name, sizeStyle='small')
+			self.angleWindow.group.text = TextBox((3, 6, 100, 100), self.name, sizeStyle='small')
+
 		GSCallbackHandler.addCallback_forOperation_(self, "GSInspectorViewControllersCallback")
+		
+		
+	@objc.python_method
+	def start( self ):
+		self.loadPreferences()
+		menuItem = NSMenuItem( self.menuName, self.toggleMenu_ )
+		Glyphs.menu[VIEW_MENU].append( menuItem )
+		Glyphs.menu[VIEW_MENU].submenu().itemWithTitle_(self.menuName).setState_( self.state )
+		Glyphs.addCallback(self.drawForeground, DRAWFOREGROUND)
+	
+	def toggleMenu_(self, sender):
+		currentState = Glyphs.menu[VIEW_MENU].submenu().itemWithTitle_(self.menuName).state()
+		self.state = not currentState
+		Glyphs.menu[VIEW_MENU].submenu().itemWithTitle_(self.menuName).setState_( self.state )
+		self.savePreferences()
+	
+	@objc.python_method
+	def savePreferences( self ):
+		try:
+			Glyphs.defaults['com.slobzheninov.ShowAngleAndDistance.menu'] = self.state
+		except:
+			import traceback
+			print('Could not save preferences')
+			print(traceback.format_exc())
+			return False
+		return True
+
+	@objc.python_method
+	def loadPreferences( self ):
+		try:
+			self.state = Glyphs.defaults['com.slobzheninov.ShowAngleAndDistance.menu']
+			if not self.state: self.state = False
+		except:
+			import traceback
+			print(traceback.format_exc())
+
+
 
 	def inspectorViewControllersForLayer_(self, layer):
-		if self.isVisible:
+		if self.state and self.isVisible:
 			return [self]
 		return []
 
@@ -58,6 +98,10 @@ class ShowAngle(ReporterPlugin):
 			return int(roundedValue)
 		else:
 			return roundedValue
+	@objc.python_method
+	def getDist(self, point1, point2):
+		distance = ((point2.x - point1.x)**2 + (point2.y - point1.y)**2)**0.5 
+		return(self.nicelyRound(distance))
 
 	@objc.python_method
 	def getAngle(self, point1, point2):
@@ -81,18 +125,20 @@ class ShowAngle(ReporterPlugin):
 
 	@objc.python_method
 	def reportAngle(self, layer):
-		angle = None
 		selection = layer.selection
-		selectionBounds = layer.selectionBounds
-
 		if len(selection) > 1:
+			angle = None
+			selectionBounds = layer.selectionBounds
 			# get angle of the selecition rectangle ◿
 			point1 = selectionBounds.origin
 			point2 = NSPoint(NSMaxX(selectionBounds), NSMaxY(selectionBounds))
 			angle = self.getAngle(point1, point2)
-			# draw angle
+			distance = self.getDist(point1, point2)
+			
+			# report angle and distance
 			if angle is not None:
-				angleString = u'◿  %s°' % angle
+				# angleString = u'◿  %s°' % angle
+				angleString = u'◿  %s°\n⤢  %s' % (angle, distance)
 				# set to info panel
 				self.angleWindow.group.text.set(angleString)
 				self.isVisible = True
@@ -102,5 +148,5 @@ class ShowAngle(ReporterPlugin):
 
 
 	@objc.python_method
-	def foreground(self, layer):
+	def drawForeground(self, layer, info):
 		self.reportAngle(layer)
