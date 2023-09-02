@@ -1,7 +1,5 @@
 # Show Angle
-Glyphs app plugin that shows the angle between currently selected notes.
-The angle is simply calculated between bottom left and top right corners of the selection rectangle. Upright is 0°, horizontal is 90°, and everything else falls in between (‘Italic angle’ kind of logic).
+Glyphs app plugin that shows on the info panel the angle and distance between currently selected notes.
+The angle and distance are simply calculated between the bottom left and top right corners of the selection rectangle. Upright is 0°, horizontal is 90°, and everything else falls in between (‘Italic angle’ kind of logic).
 
-<img width="217" alt="image" src="https://user-images.githubusercontent.com/60325634/228880705-9c91bcc9-c995-4bfc-947e-5b35b1d29b7b.png">
-
-Note: Glyphs 3 is not supported yet.
+<img width="332" alt="image" src="https://github.com/slobzheninov/ShowAngle/assets/60325634/e8ef927b-efe2-4774-a1b9-4bd707b16070">
