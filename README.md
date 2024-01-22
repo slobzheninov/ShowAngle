@@ -15,3 +15,7 @@ You can switch between Italic Width and Distance by clicking on the panel when l
 Also, added an option to show Angle, Distance and Italic Width between the offcurve and the oncurve point, if you select 1 offcurve (“handle”). This shows the same as the above:
 
 <img width="227" alt="image" src="https://github.com/slobzheninov/ShowAngle/assets/60325634/25e766a6-b333-4683-9fcd-5a64534a5f58">
+
+Measuring italic stems now makes sense:
+
+<img width="328" alt="image" src="https://github.com/slobzheninov/ShowAngle/assets/60325634/ee235345-09b2-4d89-83ea-8c1c86fca312">
