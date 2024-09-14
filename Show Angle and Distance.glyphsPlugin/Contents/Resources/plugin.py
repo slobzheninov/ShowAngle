@@ -67,7 +67,10 @@ class ShowAngleAndDistance(GeneralPlugin):
 	@objc.python_method
 	def start(self):
 		self.loadPreferences()
-		menuItem = NSMenuItem(self.menuName, self.toggleMenu_)
+		if Glyphs.versionNumber >= 3.3:
+			menuItem = NSMenuItem(self.menuName, callback=self.toggleMenu_, target=self)
+		else:
+			menuItem = NSMenuItem(self.menuName, self.toggleMenu_)
 		Glyphs.menu[VIEW_MENU].append(menuItem)
 		Glyphs.menu[VIEW_MENU].submenu().itemWithTitle_(self.menuName).setState_(self.state)
 		Glyphs.addCallback(self.drawForeground, DRAWFOREGROUND)
